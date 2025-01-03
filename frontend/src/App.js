@@ -10,7 +10,7 @@ function App() {
   const handleSub = () => {
     axios.post('http://localhost:3002/api/short', {originalUrl})
     .then((res) => {
-      setShortUrl(res.data.url.shortUrl);
+      setShortUrl(res.data);
       // console.log("API response", res.data.url.shortUrl );
     })
     .catch((err) => {
@@ -21,7 +21,7 @@ function App() {
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(`http://localhost:3002/${shortUrl}`);
+      await navigator.clipboard.writeText(shortUrl.shortUrl);
       setCopyStatus("Link copied!");
     } catch (err) {
       setCopyStatus("Failed to copy!");
@@ -42,7 +42,8 @@ function App() {
         shortUrl && (
           <>
           <p>Shorten Url : </p>
-          <a href={`http://localhost:3002/${shortUrl}`} target='_blank'>http://localhost:3002/{shortUrl}</a>
+          <a href={shortUrl?.shortUrl} target='_blank'>{shortUrl?.shortUrl}</a>
+          {shortUrl && <img src={shortUrl.qrImg} alt='QRcode' />}
           <div style={{ textAlign: "center", marginTop: "20px" }}>
           <button onClick={handleCopy} style={{ padding: "10px 20px", fontSize: "16px" }}>
             Copy Link

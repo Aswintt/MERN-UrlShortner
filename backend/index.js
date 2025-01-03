@@ -2,6 +2,10 @@ import express from "express";
 import cors from 'cors';
 import mongoose from 'mongoose';
 import { nanoid } from "nanoid";
+import QRCode from 'qrcode';
+
+const myUrl = 'https://example.com'; // Replace with your URL
+const qrImg = await QRCode.toDataURL(myUrl);
 
 
 const app = express();
@@ -29,8 +33,10 @@ app.post('/api/short', async (req, res) => {
         if(!originalUrl) return res.status(400).json({ error: "originalUrl error" });
         const shortUrl = nanoid(5);
         const url = new Url({ originalUrl, shortUrl });
+        const myUrl = `http://localhost:3002/${shortUrl}`;
+        const qrImg = await QRCode.toDataURL(myUrl);
         await url.save();
-        return res.status(200).json({ message: "URL Generated", url: url });
+        return res.status(200).json({ message: "URL Generated", shortUrl: myUrl, qrImg });
     } catch (error) {
         // console.log(error);
         res.status(500).json({ error: "Server error" });
